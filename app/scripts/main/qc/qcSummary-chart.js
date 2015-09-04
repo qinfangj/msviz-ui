@@ -23,7 +23,7 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
       ]);
 
       var options = {
-        title : 'Monthly Coffee Production by Country',
+        title : 'Quality Control by Date',
         vAxis: {title: $scope.chartId},
         hAxis: {title: 'Dates'},
         seriesType: 'scatter',
