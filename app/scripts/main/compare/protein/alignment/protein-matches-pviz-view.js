@@ -25,6 +25,8 @@ angular.module('protein-matches-pviz-view', ['pviz-custom-psm', 'thirdparties', 
       // we need the seqEntry later to be able to refresh the view
       _this.seqEntry = seqEntry;
 
+      _this._showAllPsm=false;
+
       // we add all the features to the view
       _this.refreshView();
 
@@ -54,13 +56,23 @@ angular.module('protein-matches-pviz-view', ['pviz-custom-psm', 'thirdparties', 
      * @return {Array} of PSM features
      */
     ProteinMatchesGlobalPvizView.prototype.getFeaturesPSMs = function () {
+
+
       var _this = this;
 
       var tModif = _this.protMatch.getTargetModification();
 
       var psmPos = _this._selPsmPos;
 
-      var spGroups = _.groupBy(_this.protMatch.getMyPSMs(), function(onePsm){
+      var myPsms = _this.protMatch.getMyPSMs();
+
+      // filter out psm's outside selected position
+      var filteredPsms = _.filter(myPsms, function(psm){
+        var prot = psm.proteinList[0];
+        return (psmPos <= prot.endPos && psmPos >= prot.startPos + 1);
+      });
+
+      var spGroups = _.groupBy(filteredPsms, function(onePsm){
         return onePsm.spectrumId.id + onePsm.spectrumId.runId;
       });
 
@@ -92,7 +104,9 @@ angular.module('protein-matches-pviz-view', ['pviz-custom-psm', 'thirdparties', 
             _.each(psm.pep.modificationNames, function (mods, i) {
 
               // we ignore entries with no modifications our without the modif looked for
-              if (_.size(mods) === 0 || mods[0] !== tModif) {
+
+
+              if (_.size(mods) === 0) {
                 return;
               }
 
@@ -102,9 +116,15 @@ angular.module('protein-matches-pviz-view', ['pviz-custom-psm', 'thirdparties', 
 
               // get modif rank
               var modifRank = '';
+              var selectedMod= '';
 
               if(psm.matchInfo.score.mainScore === parseFloat(bestScore)){
-                if(psm.matchInfo.rank === 1){
+
+                //Showing non selected modifications with different shape
+                if(mods[0] !== tModif ){
+                  selectedMod = false;
+                } else selectedMod = true;
+                if(psm.matchInfo.rank === 1 ){
                   modifRank = 'first';
                 }else{
                   modifRank = 'firstWithConflict';
@@ -118,7 +138,8 @@ angular.module('protein-matches-pviz-view', ['pviz-custom-psm', 'thirdparties', 
                   pos: currentPos,
                   modifNames: mods,
                   text: mods.join(','),
-                  modifRank: modifRank
+                  modifRank: modifRank,
+                  selectedModif: selectedMod
                 });
               }
 
@@ -127,9 +148,12 @@ angular.module('protein-matches-pviz-view', ['pviz-custom-psm', 'thirdparties', 
           });
 
           // if there is no modification or only at position not selected, we return an empty list
-          if(_.size(modifs) === 0 || !(_.findWhere(modifs, {pos: psmPos-1}))){
+
+       /*   if(_.size(modifs) === 0 || !(_.findWhere(modifs, {pos: psmPos-1}))){
             return;
           }
+*/
+          //if(_this._showAllPsm === false) {return;}
 
           var psm = sortedPsm[0];
           var prot = psm.proteinList[0];

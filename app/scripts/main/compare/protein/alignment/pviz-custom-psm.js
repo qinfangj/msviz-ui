@@ -15,24 +15,52 @@ angular.module('pviz-custom-psm', ['thirdparties', 'environment', 'fishtones-wra
 
         sel.selectAll('circle')
           .data(function (psm) {
-            return psm.modif;
+            return _.filter(psm.modif, function (m) {
+                return m.selectedModif;
+
+            });
           })
           .enter()
           .append('circle')
           .attr({
             r: 2,
             class: function (m) {
+
               if(m.modifRank === 'first'){
                 return 'is-first';
-              }else if(m.modifRank === 'firstWithConflict'){
+              }else if(m.modifRank === 'firstWithConflict') {
                 return 'is-firstWithConflict';
               }
+
               return '';
             }
           });
+
+        sel.selectAll('rect')
+          .data(function (psm) {
+            return _.filter(psm.modif, function (m) {
+              return m.selectedModif=== false;
+            });
+          })
+          .enter()
+          .append('rect')
+          .attr({
+            width:4,
+            height:1,
+            class: function (m) {
+
+              if(m.modifRank === 'first'){
+                return 'is-non-selected-modif';
+              }
+              //else return 'others';
+              return '';
+            }
+          });
+
         return sel;
       },
       positioner: function (viewport, d3selection) {
+
         d3selection.attr('transform', function (ft) {
           return 'translate(0,' + 0.4 * viewport.scales.y(0.5 + ft.displayTrack) + ')';
         });
@@ -48,6 +76,11 @@ angular.module('pviz-custom-psm', ['thirdparties', 'environment', 'fishtones-wra
           .attr('cx', function (ft) {
             return viewport.scales.x(ft.pos);
           });
+        d3selection.selectAll('rect')
+          .attr('x', function (ft) {
+            return viewport.scales.x(ft.pos);
+          });
+
         return d3selection;
       }
     });
@@ -76,6 +109,7 @@ angular.module('pviz-custom-psm', ['thirdparties', 'environment', 'fishtones-wra
               return m.isTarget ? 'is-target' : '';
             }
           });
+
         sel.selectAll('path')
           .data(function (psm) {
             return _.filter(psm.modif, function (m) {
@@ -95,6 +129,7 @@ angular.module('pviz-custom-psm', ['thirdparties', 'environment', 'fishtones-wra
         return sel;
       },
       positioner: function (viewport, d3selection) {
+
         d3selection.attr('transform', function (ft) {
           return 'translate(0,' + 0.4 * viewport.scales.y(0.5 + ft.displayTrack) + ')';
         });
@@ -148,7 +183,6 @@ angular.module('pviz-custom-psm', ['thirdparties', 'environment', 'fishtones-wra
             }
             return nrModif >= 10 ? 15 : nrModif * 1.5;
           });
-
         return sel;
       },
       positioner: function (viewport, d3selection) {
@@ -167,6 +201,7 @@ angular.module('pviz-custom-psm', ['thirdparties', 'environment', 'fishtones-wra
           .attr('cx', function (ft) {
             return viewport.scales.x(ft.start);
           });
+
         return d3selection;
       }
     });
@@ -195,6 +230,7 @@ angular.module('pviz-custom-psm', ['thirdparties', 'environment', 'fishtones-wra
           .classed('has-target-modif', true)
           .append('circle')
           .attr('r', 5);
+
         return sel;
       },
       positioner: function (viewport, d3selection) {

@@ -19,7 +19,6 @@ angular.module('matches-modif-filter', ['thirdparties', 'searches-list'])
       var _this = this;
 
       opts = _.extend({}, opts);
-
       _this.onComplete = opts.onComplete;
 
       _this._searchIds = opts.searchIds;
@@ -75,9 +74,6 @@ angular.module('matches-modif-filter', ['thirdparties', 'searches-list'])
 
       return _this;
     };
-
-
-
 
     /**
      * @ngdoc function

@@ -8,6 +8,7 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
  *
  */
   .service('QcSummaryService', function (httpProxy) {
+
     var QcSummaryService = function () {
       return this;
     };
@@ -19,6 +20,7 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
      * @description get the list of all qcSummaries
      * @returns {httpPromise} of an array of string
      */
+
 
     QcSummaryService.prototype.findAllBtw2Date = function (dateFrom,dateTo) {
 
