@@ -1,0 +1,25 @@
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.grid .tick {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+.grid path {
+  stroke-width: 0;
+}
+.line {
+  fill: none;
+  stroke: url(#line-gradient);
+  stroke-width: 2px;
+}
+.tooltip {
+  position: absolute;
+  width: 800px;
+  height: 28px;
+  pointer-events: none;
+}
