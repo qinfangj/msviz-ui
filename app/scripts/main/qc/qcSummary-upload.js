@@ -2,8 +2,8 @@
 angular.module('qcSummary-upload', ['thirdparties', 'environment'])
 
   .config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.useXDomain = true;
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    //$httpProvider.defaults.useXDomain = true;
+    //delete $httpProvider.defaults.headers.common['X-Requested-With'];
     //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   }])
 /**
@@ -25,7 +25,9 @@ angular.module('qcSummary-upload', ['thirdparties', 'environment'])
             modelSetter(scope, element[0].files[0]);
           });
         });
-      }
+
+      },
+      template: '<svg width="960" height="500"></svg>'
     };
   }])
   .service('fileUpload', ['$http', function ($http) {
