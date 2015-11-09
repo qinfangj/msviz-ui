@@ -21,6 +21,8 @@ angular
     'searches-list',
     'qcSummary-list',
     'qcSummary-chart',
+    'qcSummary-upload',
+    'qcSummary-delete',
     'matches-modif-filter',
     'multi-searches',
     'psms-alignment',
@@ -47,6 +49,14 @@ angular
         templateUrl: 'scripts/main/qc/qcSummary-chart.html',
         controller: 'QcSummaryChartCtrl'
       })
+      .when('/qcSummaryLoad', {
+        templateUrl: 'scripts/main/qc/qcSummary-upload.html',
+        //controller: 'QcSummaryLoadCtrl'
+      })
+      .when('/qcSummaryDelete', {
+        templateUrl: 'scripts/main/qc/qcSummary-delete.html',
+        controller: 'QcSummaryDeleteCtrl'
+      })
       .when('/proteins/:searchId', {
         templateUrl: 'scripts/main/searches/proteinsID-list.html',
         controller: 'ProteinIDsListCtrl'
@@ -63,4 +73,9 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  });
+  }).config(['$httpProvider', function($httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+  }]);
