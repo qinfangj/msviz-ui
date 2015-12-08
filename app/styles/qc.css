@@ -4,6 +4,9 @@
   stroke: #000;
   shape-rendering: crispEdges;
 }
+.line {
+  stroke-width: 2;
+}
 .grid .tick {
   stroke: lightgrey;
   stroke-opacity: 0.7;
@@ -12,14 +15,44 @@
 .grid path {
   stroke-width: 0;
 }
-.line {
+svg.g.line {
   fill: none;
-  stroke: url(#line-gradient);
-  stroke-width: 2px;
+  clip-path: url(#clip);
+  stroke-width: 2;
 }
-.tooltip {
+
+div.tooltip {
   position: absolute;
-  width: 800px;
+  width: 250px;
   height: 28px;
   pointer-events: none;
+}
+
+/* Statistic lines */
+.meanline {
+  stroke: blue;
+  fill: none;
+  stroke-width: 2;
+  clip-path: url(#clip);
+}
+.meanline-label {
+  fill: red;
+  stroke-width: 1;
+  font-size: 14px;
+}
+.sdline {
+  stroke: red;
+  fill: none;
+  stroke-width: 2;
+  stroke-dasharray: 10,10;
+  clip-path: url(#clip);
+}
+
+.sdline-label {
+  stroke-width: 1;
+  font-size: 14px;
+}
+
+#ms circle {
+  fill: blue;
 }
