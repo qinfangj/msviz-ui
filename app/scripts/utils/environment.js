@@ -9,13 +9,14 @@ angular.module('environment', ['angularytics'])
  */
   .config(function (AngularyticsProvider) {
     AngularyticsProvider.setEventHandlers(['Console', 'GoogleUniversal']);
+
   })
   .service('EnvConfig', function ($location, Angularytics) {
     var isProd = $location.$$port === 80;
     if (isProd) {
       return {
         isProd: true,
-        backendUrl: 'http://msviz.vital-it.ch/backend'
+        backendUrl: 'http://ptppc4.epfl.ch/backend'
       };
     } else {
       return {
@@ -24,8 +25,16 @@ angular.module('environment', ['angularytics'])
       };
     }
 
+
       Angularytics.init();
-  })
+  }).config(['$httpProvider', function($httpProvider) {
+
+    $httpProvider.defaults.useXDomain = true;
+
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    //$httpProvider.defaults.headers.common['Access-Control-Allow-Headers'] = '*';
+
+  }])
 /**
  * @ngdoc service
  * @name environment.service:httpProxy
@@ -50,6 +59,33 @@ angular.module('environment', ['angularytics'])
         .then(function(resp){
           return resp.data;
         });
+    };
+    /**
+     * @ngdoc method
+     * @name environment.service:httpProxy#delete
+     * @methodOf environment.service:httpProxy
+     * @description wrap DELETE call
+     * @param {String} uri the absolute uri to pass to the backend
+     * @param {Object} opts options to pass to $http.delete
+     * @return {httpPromise} of the returned boolean
+     */
+
+    HttpProxy.prototype.delete=function(uri,opts){
+      console.log('url=' + EnvConfig.backendUrl+ uri );
+      console.log('opts=' + opts );
+      return $http.delete(EnvConfig.backendUrl+uri, opts);
+    };
+
+   HttpProxy.prototype.put=function(uri,data,opts){
+      console.log('url=' + EnvConfig.backendUrl+ uri );
+      console.log(opts );
+      return $http.put(EnvConfig.backendUrl+uri,data,opts);
+    };
+
+    HttpProxy.prototype.post=function(uri,data,opts){
+      console.log('url=' + EnvConfig.backendUrl+ uri );
+      console.log(opts );
+      return $http.post(EnvConfig.backendUrl+uri,data,opts);
     };
 
     return new HttpProxy();
