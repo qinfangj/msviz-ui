@@ -1,11 +1,6 @@
 'use strict';
 angular.module('qcSummary-upload', ['thirdparties', 'environment'])
 
-  .config(['$httpProvider', function($httpProvider) {
-    //$httpProvider.defaults.useXDomain = true;
-    //delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-  }])
 /**
  * @ngdoc control
  * @name qcSummaryLoadCtrl
@@ -30,32 +25,47 @@ angular.module('qcSummary-upload', ['thirdparties', 'environment'])
       template: '<svg width="960" height="500"></svg>'
     };
   }])
-  .service('fileUpload', ['$http', function ($http) {
-    this.uploadFileToUrl = function(file, uploadUrl){
-      var fd = new FormData();
-      fd.append('file', file);
-        //var objFile={title:'why'};
-        $http.post(uploadUrl, file, {
-        //withCredentials: true,
-        transformRequest: angular.identity,
-        headers: {'Content-Type': 'text/plain'}
-      })
-        .success(function(resp){
-            console.log('Success', resp);
-        })
-        .error(function(resp){
-            console.log('fail', resp);
-        });
+  .service('FileUpload', function (httpProxy) {
+    //this.uploadFileToUrl = function(file, uploadUrl){
+    //  var fd = new FormData();
+    //  fd.append('file', file);
+    //
+    //  //var objFile={title:'why'};
+    //  return $http.post(uploadUrl, file, {
+    //    //withCredentials: true,
+    //    transformRequest: angular.identity,
+    //    headers: {'Content-Type': 'text/plain'}
+    //  });
+    //};
+    var FileUpload = function () {
+      return this;
     };
-  }])
-  .controller('QcSummaryLoadCtrl', ['$scope', 'fileUpload', function($scope, fileUpload){
+    FileUpload.prototype.loadQcSummary = function (file) {
+
+      return httpProxy.post('/qc/summary', file, {
+        transformRequest: angular.identity,
+        headers: {'Content-Type': 'text/plain'}});
+    };
+
+    return new FileUpload();
+  })
+  .controller('QcSummaryLoadCtrl', ['$scope', 'FileUpload', function($scope, FileUpload){
 
     $scope.uploadFile = function(){
       var file = $scope.myFile;
       console.log('file is ' );
       console.dir(file);
-      var uploadUrl = 'http://localhost:9000/qc/summaryLoad';
-      fileUpload.uploadFileToUrl(file, uploadUrl);
+      //var uploadUrl = 'http://localhost:9000/qc/summaryLoad';
+      FileUpload.loadQcSummary(file)
+        .success(function (resp) {
+          $scope.status= file.name+' was uploaded successfully!!!';
+          console.log('Success', resp);
+        }).error(function (error) {
+          $scope.status='failed'+error.message;
+          console.log('fail', error);
+        });
+
     };
 
   }]);
+
