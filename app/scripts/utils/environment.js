@@ -1,5 +1,6 @@
 'use strict';
 angular.module('environment', ['angularytics'])
+
 /**
  * @ngdoc function
  * @name environment.service:EnvConfig

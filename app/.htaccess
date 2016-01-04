@@ -4,6 +4,13 @@
 # to the main server config file (usually called `httpd.conf`), you should add
 # this logic there: http://httpd.apache.org/docs/current/howto/htaccess.html.
 
+
+AuthName “Authorisation Required”
+AuthUserFile “/Users/qjolliet/work/msviz-ui/app/.htpasswd”
+AuthType Basic
+require valid-user
+ErrorDocument 401 “Authorisation Required”
+
 # ##############################################################################
 # # CROSS-ORIGIN RESOURCE SHARING (CORS)                                       #
 # ##############################################################################
@@ -20,6 +27,11 @@
 #    Header set Access-Control-Allow-Origin "*"
 # </IfModule>
 
+<ifModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin: "*"
+    Header always set Access-Control-Allow-Methods "POST, GET, PUT, DELETE"
+    Header always set Access-Control-Allow-Headers "X-Requested-With, content-type"
+</ifModule>
 # ------------------------------------------------------------------------------
 # | CORS-enabled images                                                        |
 # ------------------------------------------------------------------------------
@@ -208,11 +220,15 @@ AddDefaultCharset utf-8
 # Also, some cloud hosting services require `RewriteBase` to be set:
 # http://www.rackspace.com/knowledge_center/frequently-asked-question/why-is-mod-rewrite-not-working-on-my-site
 
+# CORS OPTIONS (add this too)
+]
+</IfModule>
+
 <IfModule mod_rewrite.c>
     Options +FollowSymlinks
   # Options +SymLinksIfOwnerMatch
     RewriteEngine On
-  # RewriteBase /
+    RewriteBase /
 </IfModule>
 
 # ------------------------------------------------------------------------------
@@ -239,7 +255,9 @@ AddDefaultCharset utf-8
 <IfModule mod_rewrite.c>
     RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-    RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+    #RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
 </IfModule>
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -283,6 +301,7 @@ AddDefaultCharset utf-8
 #    </FilesMatch>
 # </IfModule>
 
+
 # ------------------------------------------------------------------------------
 # | File access                                                                |
 # ------------------------------------------------------------------------------
@@ -318,6 +337,7 @@ AddDefaultCharset utf-8
     Deny from all
     Satisfy All
 </FilesMatch>
+
 
 # ------------------------------------------------------------------------------
 # | Secure Sockets Layer (SSL)                                                 |
