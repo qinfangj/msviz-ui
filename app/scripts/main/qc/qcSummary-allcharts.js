@@ -1,58 +1,35 @@
 'use strict';
 
-/* Controllers */
-angular.module('qcSummary-chart', ['thirdparties', 'environment'])
+ //google.setOnLoadCallback(function () {
+  //angular.bootstrap(document.body, ['qcSummary-chart']);
+//});
 
-  .controller('QcSummaryChartCtrl', function($scope,$routeParams) {
+angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
 
+  .controller('QcSummaryAllChartsCtrl', function($scope,$routeParams) {
     $scope.$back = function() {
       window.history.back();
     };
 
     var summaries = JSON.parse($routeParams.data);
-    //var groupSummary;
-    //console.log('summaries=' + summaries);
-    var title,colName,max,min;
-    if ($routeParams.chartId === 'MS') {
-      title='MS';
-      colName='MS';
-    }else if ($routeParams.chartId === 'MMS'){
-      title='MS/MS';
-      colName='MMS';
-    }else if ($routeParams.chartId === 'MmsIdentify'){
-      title='MS/MS Identified';
-      colName='MmsIdentify';
-    }else if ($routeParams.chartId === 'PeptideSeq'){
-      title='Peptide Sequences Identified';
-      colName='PeptideSeq';
-    }else if ($routeParams.chartId === 'MMSIdentifyPtg'){
-      title='MS/MS Identified [%]';
-      colName='MMSIdentifyPtg';
-    }else if ($routeParams.chartId === 'PkRepSeqPtg'){
-      title='Peaks Repeatedly Sequenced [%]';
-      max=7.0;
-      min=5.0;
-      colName='PkRepSeqPtg';
-    }
 
-    var getChartInfo=function(title,colName,data,maxLimit,minLimit){
-      $scope.chartId = title;
-      $scope.maxLimit=maxLimit;
-      $scope.minLimit=minLimit;
-      $scope.scatterData= _.map(data, function (s) {
+    //get avg Ms data per date
+    var groupSummary = _.groupBy(summaries, function (value) {
+      return value.rawfileInfomation.Date;
+    });
+
+    var getScatterData=function(title,data){
+      return _.map(data, function (s) {
         return {
-          rawfileName: s.rawfileInfomation.proteinName + '_'+ s.rawfileInfomation.pQuantity + '_' + s.rawfileInfomation.machineName +
-          '_' + s.rawfileInfomation.columnType +'_'+s.rawfileInfomation.Date + '_' + s.rawfileInfomation.Index,
+          rawfileName: s.rawfileInfomation.proteinName + '_' + s.rawfileInfomation.pQuantity + '_' + s.rawfileInfomation.machineName +
+          '_' + s.rawfileInfomation.columnType + '_' + s.rawfileInfomation.Date + '_' + s.rawfileInfomation.Index,
           date: s.rawfileInfomation.Date,
-          val: s[colName]
+          val: s[title]
         };
       });
-      var groupSummary = _.groupBy(data, function (value) {
-        return value.rawfileInfomation.Date;
-      });
-
-    //Get average value array per day
-      $scope.lineData = _.map(groupSummary, function (g) {
+    };
+    var getLineData=function(colName,data){
+      return _.map(data, function (g) {
         return {
           date: g[0].rawfileInfomation.Date,
           avg: _.reduce(_.pluck(g, colName), function (memo, num) {
@@ -62,28 +39,58 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
       });
     };
 
-    getChartInfo(title,colName,summaries,max,min);
-    console.log('title=' + title);
-    console.log('colName=' + colName);
-  })
-  .directive('comboChart',function(d3){
+    $scope.msScatData= getScatterData('MS',summaries);
+    $scope.mmsScatData= getScatterData('MMS',summaries);
+    $scope.mmsidfScatData= getScatterData('MmsIdentify',summaries);
+    $scope.pepseqidfScatData= getScatterData('PeptideSeq',summaries);
+    $scope.mmsidfptgScatData= getScatterData('MMSIdentifyPtg',summaries);
+    $scope.pkrepseqptgScatData= getScatterData('PkRepSeqPtg',summaries);
+
+    //console.log('msScatData='+ $scope.msScatData);
+    $scope.msLineData=getLineData('MS',groupSummary);
+    $scope.mmsLineData=getLineData('MMS',groupSummary);
+    $scope.mmsidfLineData=getLineData('MmsIdentify',groupSummary);
+    $scope.pepseqidfLineData=getLineData('PeptideSeq',groupSummary);
+    $scope.mmsidfptgLineData=getLineData('MMSIdentifyPtg',groupSummary);
+    $scope.pkrepseqptgLineData=getLineData('PkRepSeqPtg',groupSummary);
+
+
+  }).directive('divChart',function(d3){
     return {
 
       restrict: 'E',
-      template: '<svg width="1100" height="600"></svg>',
+      template: '<svg width='+window.outerWidth*0.45 +' height='+window.innerHeight/2+'>',
       link: function (scope, elem, attrs) {
-        //console.log('scatterData2='+scope.lineData);
+        console.log('id='+ elem[0].id);
+        var title,max,min;
+        if (elem[0].id === 'ms') {
+          title='MS';
+        }else if (elem[0].id === 'mms'){
+          title='MS/MS';
+        }else if (elem[0].id === 'mmsidf'){
+          title='MS/MS Identified';
+        }else if (elem[0].id === 'pepseqidf'){
+          title='Peptide Sequences Identified';
+        }else if (elem[0].id === 'mmsidfptg'){
+          title='MS/MS Identified [%]';
+        }else if (elem[0].id === 'pkrepseqptg'){
+          title='Peaks Repeatedly Sequenced [%]';
+          max=7.0;
+          min=5.0;
+        }
+
         var scatterData=scope[attrs.scatterData];
+        console.log('msScatData='+scatterData);
         var lineData=scope[attrs.lineData];
-        //console.log('scatterData='+lineData);
+        console.log('msLineData='+lineData);
 
         var rawSvg=elem.find('svg');
         //var svg = d3.select(rawSvg[0]);
 
         //Define the margin,width,height
-        var margin = {top: 30, right: 150, bottom: 70, left: 80},
-          width = 1100 - margin.left - margin.right,
-          height = 600 - margin.top - margin.bottom;
+        var margin = {top: 30, right:120, bottom: 70, left: 80},
+          width = window.outerWidth*0.45- margin.left - margin.right,
+          height = window.innerHeight/2- margin.top - margin.bottom;
 
         // Set the ranges x
         var x = d3.scale.ordinal();
@@ -125,47 +132,10 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
         })*0.9, d3.max(scatterData, function (d) {
           return d.val;
         })*1.1]);
-        console.log('max val ' + d3.max(scatterData, function (d) {
+
+        console.log('max val=' + d3.max(scatterData, function (d) {
             return d.val;
           }));
-
-
-        //svg.append('line')          // attach a line
-        //  .style('stroke', 'red')  // colour the line
-        //  .attr('x1', 0)     // x position of the first end of the line
-        //  .attr('y1', y(scope.maxLimit))      // y position of the first end of the line
-        //  .attr('x2', width)     // x position of the second end of the line
-        //  .attr('y2', y(scope.maxLimit));    // y position of the second end of the line
-
-        //svg.append('line')          // attach a line
-        //  .style('stroke', 'red')  // colour the line
-        //  .attr('x1', 0)     // x position of the first end of the line
-        //  .attr('y1', y(scope.minLimit))      // y position of the first end of the line
-        //  .attr('x2', width)     // x position of the second end of the line
-        //  .attr('y2', y(scope.minLimit));    // y position of the second end of the line
-
-/*
-        //gradient setting
-        svg.append('linearGradient')
-          .attr('id', 'dot-gradient')
-          .attr('gradientUnits', 'userSpaceOnUse')
-          .attr('x1', 0).attr('y1', y(7600))
-          .attr('x2', 0).attr('y2', y(8050))
-          .selectAll('stop')
-          .data([
-            {offset: '0%', color: 'black'},
-            {offset: '50%', color: 'black'},
-            {offset: '50%', color: 'red'},
-            {offset: '100%', color: 'red'}
-          ])
-          .enter().append('stop')
-          .attr('offset', function (d) {
-            return d.offset;
-          })
-          .attr('stop-color', function (d) {
-            return d.color;
-          });
-*/
 
         // Add the valueline path.
         var lineFunc = d3.svg.line()
@@ -200,7 +170,7 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
             tooltip.transition()
               .duration(200)
               .style('opacity', 0.9);
-            tooltip.html(d.rawfileName + '<br/>'+ scope.chartId +':' + d.val )
+            tooltip.html(d.rawfileName + '<br/>'+ title +':' + d.val )
               .style('left', (d3.event.pageX + 5) + 'px')
               .style('top', (d3.event.pageY - 28) + 'px');
           })
@@ -236,20 +206,20 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
           .attr('class', 'y axis')
           .call(yAxis);
 
-        if (scope.chartId==='Peaks Repeatedly Sequenced [%]'){
+        if (elem[0].id==='pkrepseqptg'){
           svg.append('line')          // attach a line
             .style('stroke', 'red')  // colour the line
             .attr('x1', 0)     // x position of the first end of the line
-            .attr('y1', y(scope.maxLimit))      // y position of the first end of the line
+            .attr('y1', y(max))      // y position of the first end of the line
             .attr('x2', width)     // x position of the second end of the line
-            .attr('y2', y(scope.maxLimit));    // y position of the second end of the line
+            .attr('y2', y(max));    // y position of the second end of the line
 
           svg.append('line')          // attach a line
             .style('stroke', 'pink')  // colour the line
             .attr('x1', 0)     // x position of the first end of the line
-            .attr('y1', y(scope.minLimit))      // y position of the first end of the line
+            .attr('y1', y(min))      // y position of the first end of the line
             .attr('x2', width)     // x position of the second end of the line
-            .attr('y2', y(scope.minLimit));    // y position of the second end of the line
+            .attr('y2', y(min));    // y position of the second end of the line
         }else {
           var lineStatistic = d3.svg.line()
             .x(function (d) {
@@ -293,7 +263,6 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
             .datum(sdMinData)
             .attr('class', 'sdline min')
             .attr('d', lineStatistic);
-
           svg.append('text')
             .attr('x', width)
             .attr('y', y(medianValue))
@@ -317,7 +286,6 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
         }
 
 
-
         //set X axis label
         svg.append('text')
           //.attr('class', 'label')
@@ -335,11 +303,19 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
           .attr('x', 0 - (height / 2))
           .attr('dy', '1em')
           .style('text-anchor', 'middle')
-          .text(scope.chartId);
+          .text(title);
 
       }
-  };
+    };
 
-});
-
-
+  }).directive('backButton', function(){
+    return {
+      restrict: 'A',
+      link: function(scope, element) {
+        element.bind('click', function () {
+          history.back();
+          scope.$apply();
+        });
+      }
+    };
+  });
