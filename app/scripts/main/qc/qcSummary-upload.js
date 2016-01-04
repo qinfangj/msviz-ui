@@ -49,7 +49,7 @@ angular.module('qcSummary-upload', ['thirdparties', 'environment'])
 
     return new FileUpload();
   })
-  .controller('QcSummaryLoadCtrl', ['$scope', 'FileUpload', function($scope, FileUpload){
+  .controller('QcSummaryLoadCtrl',  function($window, $scope, FileUpload){
 
     $scope.uploadFile = function(){
       var file = $scope.myFile;
@@ -58,14 +58,16 @@ angular.module('qcSummary-upload', ['thirdparties', 'environment'])
       //var uploadUrl = 'http://localhost:9000/qc/summaryLoad';
       FileUpload.loadQcSummary(file)
         .success(function (resp) {
-          $scope.status= file.name+' was uploaded successfully!!!';
+          //$scope.status= file.name+' was uploaded successfully!!!';
+          $window.alert(file.name+' was uploaded successfully!!!');
           console.log('Success', resp);
         }).error(function (error) {
           $scope.status='failed'+error.message;
+          $window.alert('failed'+error.message);
           console.log('fail', error);
         });
 
     };
 
-  }]);
+  });
 
