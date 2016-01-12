@@ -12,6 +12,8 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
     };
 
     var summaries = JSON.parse($routeParams.data);
+    var devInfos = JSON.parse($routeParams.dev);
+    console.log(devInfos);
 
     //get avg Ms data per date
     var groupSummary = _.groupBy(summaries, function (value) {
@@ -38,6 +40,8 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
         };
       });
     };
+
+    $scope.devInfos=devInfos;
 
     $scope.msScatData= getScatterData('MS',summaries);
     $scope.mmsScatData= getScatterData('MMS',summaries);
@@ -83,6 +87,7 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
         console.log('msScatData='+scatterData);
         var lineData=scope[attrs.lineData];
         console.log('msLineData='+lineData);
+        var devInfos=scope.devInfos;
 
         var rawSvg=elem.find('svg');
         //var svg = d3.select(rawSvg[0]);
@@ -122,9 +127,11 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
           .style('opacity', 0);
 
         // Scale the range of the data X,Y
-        x.domain(scatterData.map(function (d) {
+        var domainX= scatterData.map(function (d) {
           return d.date;
-        }))
+        }).concat(devInfos.map(function(i){return i.devDate;}));
+
+        x.domain(_.sortBy(domainX,function(num){return num;}))
           .rangePoints([0, width]);
 
         y.domain([d3.min(scatterData, function (d) {
@@ -205,6 +212,31 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
         svg.append('g')
           .attr('class', 'y axis')
           .call(yAxis);
+
+        _.map(devInfos,function(info){
+
+          svg.append('line')          // attach a line
+            .style('stroke', 'green')  // colour the line
+            .attr('stroke-width', 2)
+            .attr('x1', x(info.devDate))     // x position of the first end of the line
+            .attr('y1', 0)            // y position of the first end of the line
+            .attr('x2', x(info.devDate))        // x position of the second end of the line
+            .attr('y2', height)
+            .on('mouseover', function () {
+              tooltip.transition()
+                .duration(200)
+                .style('opacity', 1.0);
+              tooltip.html('Device '+ info.devType +' Information:<br>'+ info.devInfo  )
+                .style('left', (d3.event.pageX) + 'px')
+                .style('top', (d3.event.pageY - 30) + 'px')
+              ;})
+            .on('mouseout', function () {
+              tooltip.transition()
+                .duration(500)
+                .style('opacity', 0);
+            });
+
+        });   // y position of the second end of the line
 
         if (elem[0].id==='pkrepseqptg'){
           svg.append('line')          // attach a line
