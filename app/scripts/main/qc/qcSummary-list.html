@@ -1,31 +1,39 @@
 
 <h1>QcSummary</h1>
-<lable>MachineName:
+<lable>DeviceType:</lable>
   <select id="machineSel" ng-model="machineName">
     <option value="" selected>All</option>
     <option ng-repeat="machineNm in machineGrp" value="{{machineNm}}">{{machineNm}}</option>
   </select>
-</lable></br>
+<lable> ColumnType:</lable>
+  <select id="columnSel" ng-model="columnType">
+    <option value="" selected>All</option>
+    <option ng-repeat="colType in columnGrp" value="{{colType}}">{{colType}}</option>
+  </select>
+</br>
+<input type="button" value="Add Device Information" ng-click="openDevInfoWindow()"/></br>
+
 <label>DateFrom:<input type="text" ng-model="dateFrom"></label>
 <label>DateTo:<input type="text" ng-model="dateTo"></label>
 <button type="button" ng-Click="findQcSummary(dateFrom,dateTo)">Search</button>
 <button type="button" ng-Click="deleteQcSummary(dateFrom,dateTo)">DELETE</button>
+<hr>
   <table class="table table-striped">
     <thead>
     <tr>
       <th>Index</th>
       <th>RawfileInfomation</th>
-      <th><a href="#/qcSummary/MS?data={{summaries| filter:machineName}}">MS</a></th>
-      <th><a href="#/qcSummary/MMS?data={{summaries| filter:machineName}}">MS/MS</a></th>
-      <th><a href="#/qcSummary/MmsIdentify?data={{summaries| filter:machineName}}">MS/MS Identified</a></th>
-      <th><a href="#/qcSummary/PeptideSeq?data={{summaries| filter:machineName}}">Peptide Sequences Identified</a></th>
-      <th><a href="#/qcSummary/MMSIdentifyPtg?data={{summaries| filter:machineName}}">MS/MS Identified [%]</a></th>
-      <th><a href="#/qcSummary/PkRepSeqPtg?data={{summaries| filter:machineName}}">Peaks Repeatedly Sequenced [%]</a></th>
+      <th><a href="#/qcSummary/MS?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS</a></th>
+      <th><a href="#/qcSummary/MMS?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS/MS</a></th>
+      <th><a href="#/qcSummary/MmsIdentify?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS/MS Identified</a></th>
+      <th><a href="#/qcSummary/PeptideSeq?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">Peptide Sequences Identified</a></th>
+      <th><a href="#/qcSummary/MMSIdentifyPtg?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS/MS Identified [%]</a></th>
+      <th><a href="#/qcSummary/PkRepSeqPtg?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">Peaks Repeatedly Sequenced [%]</a></th>
       <th>Comments</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="summary in summaries | filter:machineName" ng-init="addId($index,summaries)">
+    <tr ng-repeat="summary in summaries | filter:machineName |filter:columnType" ng-init="addId($index,summaries)">
       <td>{{$index+1}}</td>
       <td>{{summary.rawfileInfomation.proteinName}}_{{summary.rawfileInfomation.pQuantity}}_{{summary.rawfileInfomation.machineName}}_{{summary.rawfileInfomation.columnType}}_{{summary.rawfileInfomation.Date}}_{{summary.rawfileInfomation.Index}}</td>
       <td>{{summary.MS}}</td>
@@ -40,7 +48,6 @@
     </tbody>
   </table>
 
-
-<a href="#/qcSummaryAllCharts?data={{summaries| filter:machineName}}"><button class="btn btn-default">Show All Charts</button></a>
+<a href="#/qcSummaryAllCharts?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}"><button class="btn btn-default">Show All Charts</button></a>
 <button class="btn btn-default" type="submit" ng-click="saveComments()">Save Comments</button></lable>
 
