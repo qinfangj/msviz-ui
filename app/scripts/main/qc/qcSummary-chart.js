@@ -10,6 +10,8 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
     };
 
     var summaries = JSON.parse($routeParams.data);
+    var devInfos = JSON.parse($routeParams.dev);
+    console.log(devInfos);
     //var groupSummary;
     //console.log('summaries=' + summaries);
     var title,colName,max,min;
@@ -35,10 +37,11 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
       colName='PkRepSeqPtg';
     }
 
-    var getChartInfo=function(title,colName,data,maxLimit,minLimit){
+    var getChartInfo=function(title,colName,data,dev,maxLimit,minLimit){
       $scope.chartId = title;
       $scope.maxLimit=maxLimit;
       $scope.minLimit=minLimit;
+      $scope.devInfos=dev;
       $scope.scatterData= _.map(data, function (s) {
         return {
           rawfileName: s.rawfileInfomation.proteinName + '_'+ s.rawfileInfomation.pQuantity + '_' + s.rawfileInfomation.machineName +
@@ -62,9 +65,10 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
       });
     };
 
-    getChartInfo(title,colName,summaries,max,min);
+    getChartInfo(title,colName,summaries,devInfos,max,min);
     console.log('title=' + title);
     console.log('colName=' + colName);
+    //console.log('devInfos='+$scope.devInfos);
   })
   .directive('comboChart',function(d3){
     return {
@@ -73,9 +77,10 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
       template: '<svg width="1100" height="600"></svg>',
       link: function (scope, elem, attrs) {
         //console.log('scatterData2='+scope.lineData);
+        var devInfos=scope.devInfos;
         var scatterData=scope[attrs.scatterData];
         var lineData=scope[attrs.lineData];
-        //console.log('scatterData='+lineData);
+        //console.log('devInfos='+devInfos);
 
         var rawSvg=elem.find('svg');
         //var svg = d3.select(rawSvg[0]);
@@ -114,10 +119,13 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
           .attr('class', 'tooltip')
           .style('opacity', 0);
 
-        // Scale the range of the data X,Y
-        x.domain(scatterData.map(function (d) {
+        var domainX= scatterData.map(function (d) {
           return d.date;
-        }))
+        }).concat(devInfos.map(function(i){return i.devDate;}));
+
+        console.log(domainX);
+        // Scale the range of the data X,Y
+        x.domain(_.sortBy(domainX,function(num){return num;}))
           .rangePoints([0, width]);
 
         y.domain([d3.min(scatterData, function (d) {
@@ -235,6 +243,33 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
         svg.append('g')
           .attr('class', 'y axis')
           .call(yAxis);
+
+
+        _.map(devInfos,function(info){
+
+           svg.append('line')          // attach a line
+          .style('stroke', 'green')  // colour the line
+          .attr('stroke-width', 2)
+          .attr('x1', x(info.devDate))     // x position of the first end of the line
+          .attr('y1', 0)            // y position of the first end of the line
+          .attr('x2', x(info.devDate))        // x position of the second end of the line
+          .attr('y2', height)
+             .on('mouseover', function () {
+               tooltip.transition()
+                 .duration(200)
+                 .style('opacity', 1.0);
+               tooltip.html('Device '+ info.devType +' Information:<br>'+ info.devInfo  )
+                 .style('left', (d3.event.pageX) + 'px')
+                 .style('top', (d3.event.pageY - 30) + 'px')
+               ;})
+             .on('mouseout', function () {
+               tooltip.transition()
+                 .duration(500)
+                 .style('opacity', 0);
+             });
+
+        });   // y position of the second end of the line
+
 
         if (scope.chartId==='Peaks Repeatedly Sequenced [%]'){
           svg.append('line')          // attach a line
