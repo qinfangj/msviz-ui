@@ -1,0 +1,49 @@
+<div ng-controller="QcDeviceInfoEditCtrl" style="height:500px; width:960px">
+  <h1>Device Information Edit</h1>
+  <input type="button" value="Set Device Info" ng-click="setDevInfo()"/>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>&emsp; </th>
+      <th>Date</th>
+      <th>Device Type</th>
+      <th>Infomation</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>&emsp;</td>
+      <td><input type="text"  ng-model="devDate"></td>
+      <td><select id="machineSel" ng-model="devType">
+            <option value="" selected>Select</option>
+            <option ng-repeat="machineNm in machineGrp" value="{{machineNm}}">{{machineNm}}</option>
+        </select>
+      </td>
+      <td><input type="text"  ng-model="devInfo"></td>
+      <td><input type="button" value="Add" ng-click="addDevInfo(devDate,devType,devInfo)"></td>
+    </tr>
+    </tbody>
+  </table>
+  <hr>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>&emsp; </th>
+      <th>Date</th>
+      <th>Device Type</th>
+      <th>Infomation</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="devInfo in devInfos ">
+      <td>{{$index+1}}</td>
+      <td>{{devInfo.devDate}}</td>
+      <td>{{devInfo.devType}}</td>
+      <td>{{devInfo.devInfo}}</td>
+      <td><input type="button" value="Delete" ng-click="delDevInfo('{{devInfo.devDate}}','{{devInfo.devType}}')"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
