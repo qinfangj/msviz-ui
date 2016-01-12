@@ -48,12 +48,22 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
 
 )
 
-  .controller('QcSummaryListCtrl', function($scope,$route,$window, QcSummaryService){
+  .controller('QcSummaryListCtrl', function($scope,$route,$window, QcSummaryService,QcDevInfoService){
+
+
+
 
     QcSummaryService.list().then(function(data){
       $scope.summaries = data;
       $scope.machineGrp=getMachineGrp(data);
-      console.log($scope.machineName);
+      $scope.columnGrp=getColumnGrp(data);
+
+    });
+
+    //get Device infomation
+    QcDevInfoService.list().then(function(data){
+      $scope.devInfos = data;
+      console.log($scope.devInfos);
 
     });
 
@@ -71,7 +81,8 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
 
           QcSummaryService.list().then(function (data) {
             $scope.summaries = data;
-            $scope.machineGrp=Array.from(getMachineGrp(data));
+            $scope.machineGrp=getMachineGrp(data);
+            $scope.columnGrp=getColumnGrp(data);
             $scope.dateFrom = '';
             $scope.dateTo = '';
           });
@@ -129,8 +140,13 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
     };
 
     var getMachineGrp= function(summaries){
-      console.log(_.uniq(_.map(summaries,function(s){return s.rawfileInfomation.machineName;})));
+      //console.log(_.uniq(_.map(summaries,function(s){return s.rawfileInfomation.machineName;})));
       return _.uniq(_.map(summaries,function(s){return s.rawfileInfomation.machineName;}));
+
+    };
+    var getColumnGrp= function(summaries){
+      //console.log(_.uniq(_.map(summaries,function(s){return s.rawfileInfomation.columnType.substr(0,s.rawfileInfomation.columnType.length-3);})));
+      return _.uniq(_.map(summaries,function(s){return s.rawfileInfomation.columnType.substr(0,s.rawfileInfomation.columnType.indexOf('_'));}));
 
     };
       //return new Set(_.map(summaries,function(s){
@@ -147,6 +163,14 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
 
     };
 
+    $scope.devInfos=[];
+    $scope.openDevInfoWindow = function () {
 
+      window.$windowScope = $scope;
+
+      console.log($scope.devInfos);
+
+      $window.open('#/qcDeviceInfoEdit');
+    };
 });
 
