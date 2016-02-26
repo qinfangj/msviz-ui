@@ -1,16 +1,17 @@
 
 <h1>QcSummary</h1>
-<lable>DeviceType:</lable>
+<label>DeviceType:</label>
   <select id="machineSel" ng-model="machineName">
     <option value="" selected>All</option>
     <option ng-repeat="machineNm in machineGrp" value="{{machineNm}}">{{machineNm}}</option>
   </select>
-<lable> ColumnType:</lable>
+
+<label>ColumnType:</label>
   <select id="columnSel" ng-model="columnType">
     <option value="" selected>All</option>
     <option ng-repeat="colType in columnGrp" value="{{colType}}">{{colType}}</option>
   </select>
-</br>
+
 <input type="button" value="Add Device Information" ng-click="openDevInfoWindow()"/></br>
 
 <label>DateFrom:<input type="text" ng-model="dateFrom"></label>
@@ -29,6 +30,7 @@
       <th><a href="#/qcSummary/PeptideSeq?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">Peptide Sequences Identified</a></th>
       <th><a href="#/qcSummary/MMSIdentifyPtg?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS/MS Identified [%]</a></th>
       <th><a href="#/qcSummary/PkRepSeqPtg?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">Peaks Repeatedly Sequenced [%]</a></th>
+      <th><a href="#/qcSummary/MassStdDev?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">Mass Standard Deviation [ppm] </a></th>
       <th>Comments</th>
     </tr>
     </thead>
@@ -42,6 +44,7 @@
       <td>{{summary.PeptideSeq}}</td>
       <td>{{summary.MMSIdentifyPtg}}</td>
       <td>{{summary.PkRepSeqPtg}}</td>
+      <td>{{summary.MassStdDev}}</td>
       <td><input type="text" id={{$index}} ng-model="summary.Cmt" ng-blur="updateInfo($index)">{{summary.Cmt}}</td>
 
     </tr>
