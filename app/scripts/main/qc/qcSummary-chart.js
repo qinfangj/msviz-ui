@@ -35,6 +35,9 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
       max=7.0;
       min=5.0;
       colName='PkRepSeqPtg';
+    }else if ($routeParams.chartId === 'MassStdDev'){
+      title='Mass Standard Deviation [ppm]';
+      colName='MassStdDev';
     }
 
     var getChartInfo=function(title,colName,data,dev,maxLimit,minLimit){
@@ -123,7 +126,7 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
           return d.date;
         }).concat(devInfos.map(function(i){return i.devDate;}));
 
-        console.log(domainX);
+        //console.log(domainX);
         // Scale the range of the data X,Y
         x.domain(_.sortBy(domainX,function(num){return num;}))
           .rangePoints([0, width]);
@@ -207,10 +210,11 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
           .on('mouseover', function (d) {
             tooltip.transition()
               .duration(200)
-              .style('opacity', 0.9);
-            tooltip.html(d.rawfileName + '<br/>'+ scope.chartId +':' + d.val )
+              .style('opacity', 0.8);
+            tooltip.html('<table><tr><td style="font-weight: bold;text-underline;" >'+ d.rawfileName + '</td></tr><tr><td>#'+ scope.chartId +':' + d.val +'</td></tr></table>' )
               .style('left', (d3.event.pageX + 5) + 'px')
               .style('top', (d3.event.pageY - 28) + 'px');
+
           })
           .on('mouseout', function () {
             tooltip.transition()

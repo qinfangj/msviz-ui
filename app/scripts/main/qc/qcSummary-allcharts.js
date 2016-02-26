@@ -49,6 +49,7 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
     $scope.pepseqidfScatData= getScatterData('PeptideSeq',summaries);
     $scope.mmsidfptgScatData= getScatterData('MMSIdentifyPtg',summaries);
     $scope.pkrepseqptgScatData= getScatterData('PkRepSeqPtg',summaries);
+    $scope.massstddevScatData= getScatterData('MassStdDev',summaries);
 
     //console.log('msScatData='+ $scope.msScatData);
     $scope.msLineData=getLineData('MS',groupSummary);
@@ -57,6 +58,7 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
     $scope.pepseqidfLineData=getLineData('PeptideSeq',groupSummary);
     $scope.mmsidfptgLineData=getLineData('MMSIdentifyPtg',groupSummary);
     $scope.pkrepseqptgLineData=getLineData('PkRepSeqPtg',groupSummary);
+    $scope.massstddevLineData=getLineData('MassStdDev',groupSummary);
 
 
   }).directive('divChart',function(d3){
@@ -81,6 +83,8 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
           title='Peaks Repeatedly Sequenced [%]';
           max=7.0;
           min=5.0;
+        }else if (elem[0].id === 'massstddev'){
+          title='Mass Standard Deviation [ppm]';
         }
 
         var scatterData=scope[attrs.scatterData];
