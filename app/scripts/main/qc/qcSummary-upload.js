@@ -51,23 +51,29 @@ angular.module('qcSummary-upload', ['thirdparties', 'environment'])
   })
   .controller('QcSummaryLoadCtrl',  function($window, $scope, FileUpload){
 
-    $scope.uploadFile = function(){
-      var file = $scope.myFile;
-      console.log('file is ' );
-      console.dir(file);
-      //var uploadUrl = 'http://localhost:9000/qc/summaryLoad';
-      FileUpload.loadQcSummary(file)
-        .success(function (resp) {
-          //$scope.status= file.name+' was uploaded successfully!!!';
-          $window.alert(file.name+' was uploaded successfully!!!');
-          console.log('Success', resp);
-        }).error(function (error) {
-          $scope.status='failed'+error.message;
-          $window.alert('failed'+error.message);
-          console.log('fail', error);
-        });
+    $scope.uploadFiles= function() {
+      var files = document.getElementById('file').files;
+      $scope.fileList = [];
+
+      angular.forEach(files, function (file) {
+        console.log('file is ' );
+        console.dir(file);
+        //$scope.$apply(
+          $scope.fileList.push({name: file.name})
+        //);
+        FileUpload.loadQcSummary(file).success(function (resp) {
+            //$scope.status= file.name+' was uploaded successfully!!!';
+            $window.alert(file.name+' was uploaded successfully!!!');
+            console.log('Success', resp);
+          }).error(function (error) {
+            $scope.status='failed'+error.message;
+            $window.alert('failed'+error.message);
+            //console.log('fail', error);
+          });
+      });
 
     };
+
 
   });
 
