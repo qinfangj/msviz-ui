@@ -133,6 +133,10 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
         QcSummaryService.findAllBtw2Date(dateFrom, dateTo).then(function (data) {
           $scope.summaries = data;
         });
+
+        QcDevInfoService.findDevInfoBtw2Date(dateFrom,dateTo).then(function(info){
+          $scope.devInfos = info;
+        });
       }
       getMachineGrp($scope.summaries);
       //$scope.status ='';
