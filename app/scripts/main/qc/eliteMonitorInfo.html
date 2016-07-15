@@ -1,0 +1,44 @@
+<body ng-controller="eliteMonitorInfoCtrl">
+<button ng-click="show('info')">Show Elite Monitor Infomation</button>
+<button ng-click="show('chart')">Show Elite Monitor Chart</button>
+<hr>
+<h1>Elite Monitor Infomation</h1>
+<div ng-show="divShow == 'info'">Infomation
+  <table class="table table-bordered table-hover ">
+    <colgroup>
+      <col width="15%" />
+      <col width="15%" />
+      <col width="15%" />
+      <col width="30%" />
+      <col width="25%" />
+    </colgroup>
+    <tr>
+      <th>Date </th>
+      <th>Multiplier1</th>
+      <th>Multiplier2</th>
+      <th>Comment</th>
+      <th>&emsp;</th>
+    </tr>
+    <tr ng-repeat="monitorInfo in eliteMonitorInfos">
+      <td>{{monitorInfo.monitorDate}}</td>
+      <td>{{monitorInfo.Multplier1}}</td>
+      <td>{{monitorInfo.Multplier2}}</td>
+      <td>{{monitorInfo.Comment}}</td>
+      <td><input type="button" value="Delete" ng-click="delEliteMonitorInfo('{{monitorInfo.monitorDate}}','{{monitorInfo.monitorIndex}}')"></td>
+    </tr>
+
+  <tr><td><input type="button" value="Add" ng-click="addEliteMonitorInfo(monitorDate,Multplier1,Multplier2,Comment)"></td></tr>
+  <tr>
+    <td><input type="text"  style="width:90%"  ng-model="monitorDate"></td>
+    <td><input type="text"  style="width:90%" ng-model="Multplier1"></td>
+    <td><input type="text"  style="width:90%" ng-model="Multplier2"></td>
+    <td><input type="text"  style="width:90%" ng-model="Comment"></td>
+
+  </tr>
+  </table>
+</div>
+
+
+
+<div ng-show="divShow == 'chart'">chart</div>
+</body>
