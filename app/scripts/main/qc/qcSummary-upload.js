@@ -59,7 +59,7 @@ angular.module('qcSummary-upload', ['thirdparties', 'environment'])
         console.log('file is ' );
         console.dir(file);
         //$scope.$apply(
-          $scope.fileList.push({name: file.name})
+          $scope.fileList.push({name: file.name});
         //);
         FileUpload.loadQcSummary(file).success(function (resp) {
             //$scope.status= file.name+' was uploaded successfully!!!';
