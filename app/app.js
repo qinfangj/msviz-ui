@@ -13,6 +13,7 @@ angular
     'ui.select',
     'thirdparties',
     'environment',
+    'checklist-model',
     'fishtones-wrapper',
     'matches-psms',
     'matches-basket',
@@ -23,6 +24,11 @@ angular
     'qcSummary-chart',
     'qcSummary-allcharts',
     'qcSummary-upload',
+    'qcDevInfo-edit',
+    'eliteMonitorInfo',
+    'eliteMonitorChart',
+    'qexTransInfo',
+    'qexTransChart',
     'matches-modif-filter',
     'multi-searches',
     'psms-alignment',
@@ -50,8 +56,56 @@ angular
         controller: 'QcSummaryChartCtrl'
       })
       .when('/qcSummaryLoad', {
-        templateUrl: 'scripts/main/qc/qcSummary-upload.html',
+        templateUrl: 'scripts/main/qc/qcSummary-upload.html'
         //controller: 'QcSummaryLoadCtrl'
+      })
+      .when('/eliteMonitorInfo', {
+        templateUrl: 'scripts/main/qc/eliteMonitorInfo.html',
+        controller: 'EliteMonitorInfoCtrl'
+      })
+      .when('/eliteMonitorInfo/edit', {
+        templateUrl: 'scripts/main/qc/eliteMonitorInfoEdit.html',
+        controller: 'EliteMonitorInfoEditCtrl'
+      })
+      .when('/eliteMonitorInfo/:data', {
+        templateUrl: 'scripts/main/qc/eliteMonitorChart.html',
+        controller: 'EliteMonitorChartCtrl'
+      })
+      .when('/lumosMonitorInfo', {
+        templateUrl: 'scripts/main/qc/lumosMonitorInfo.html',
+        controller: 'LumosMonitorInfoCtrl'
+      })
+      .when('/lumosMonitorInfo/edit', {
+        templateUrl: 'scripts/main/qc/eliteMonitorInfoEdit.html',
+        controller: 'LumosMonitorInfoEditCtrl'
+      })
+      .when('/lumosMonitorInfo/:data', {
+        templateUrl: 'scripts/main/qc/lumosMonitorChart.html',
+        controller: 'LumosMonitorChartCtrl'
+      })
+      .when('/qexTransInfo', {
+        templateUrl: 'scripts/main/qc/qexTransInfo.html',
+        controller: 'QexTransInfoCtrl'
+      })
+      .when('/qexTransInfo/:data', {
+        templateUrl: 'scripts/main/qc/qexTransChart.html',
+        controller: 'QexTransChartCtrl'
+      })
+      //.when('/qexTransInfo/chart', {
+      //  templateUrl: 'scripts/main/qc/qexTransChart.html',
+      //  controller: 'QexTransChartCtrl'
+      //})
+      .when('/qexHFTransInfo', {
+        templateUrl: 'scripts/main/qc/qexTransInfo.html',
+        controller: 'QexHFTransInfoCtrl'
+      })
+      .when('/qexHFTransInfo/:data', {
+        templateUrl: 'scripts/main/qc/qexTransChart.html',
+        controller: 'QexHFTransChartCtrl'
+      })
+      .when('/qcDeviceInfoEdit', {
+        templateUrl: 'scripts/main/qc/qcDevInfo-edit.html',
+        controller: 'QcDeviceInfoEditCtrl'
       })
       .when('/qcSummaryAllCharts', {
         templateUrl: 'scripts/main/qc/qcSummary-allcharts.html',
