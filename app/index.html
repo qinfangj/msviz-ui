@@ -46,16 +46,26 @@
 
     <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">QC <span
+        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Hela QC <span
           class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="#/qcSummary">QcSummary</a></li>
             <li><a href="#/qcSummaryLoad">Upload</a></li>
           </ul>
       </li>
-      <!--
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">MS QC <span
+          class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#/eliteMonitorInfo">Elite:Electronic Multiplier</a></li>
+          <li><a href="#/qexTransInfo">Qex:Transmission Test</a></li>
+          <li><a href="#/lumosMonitorInfo">Lumos:Electronic Multiplier</a></li>
+          <li><a href="#/qexHFTransInfo">QexHF:Transmission Test</a></li>
+        </ul>
+      </li>
+
       <li><a href="#/searches">searches</a></li>
-      -->
+
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help <span
           class="caret"></span></a>
@@ -74,7 +84,7 @@
 
   <div class="footer">
     <p>shaped with <span class="glyphicon glyphicon-heart" style="color:red"></span> by the Computational Proteomics
-      team (Vital-IT/PAF @ SIB)</p>
+      team (PCF @ EPFL)</p>
   </div>
 </div>
 
@@ -125,6 +135,7 @@
 <script src="bower_components/sib-fishtones-js/dist/fishtones-js-bundle-min.js"></script>
 <script src="bower_components/pviz/dist/pviz-bundle.min.js"></script>
 <script src="bower_components/underscore/underscore.js"></script>
+<script src="bower_components/checklist-model/checklist-model.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -143,7 +154,12 @@
 <script src="scripts/main/qc/qcSummary-chart.js"></script>
 <script src="scripts/main/qc/qcSummary-allcharts.js"></script>
 <script src="scripts/main/qc/qcSummary-upload.js"></script>
+<script src="scripts/main/qc/qcDevInfo-edit.js"></script>
+<script src="scripts/main/qc/eliteMonitorInfo.js"></script>
+<script src="scripts/main/qc/eliteMonitorChart.js"></script>
 
+<script src="scripts/main/qc/qexTransInfo.js"></script>
+<script src="scripts/main/qc/qexTransChart.js"></script>
 
 <script src="scripts/common/proteins.js"></script>
 <script src="scripts/main/compare/searches/multi-searches.js"></script>
