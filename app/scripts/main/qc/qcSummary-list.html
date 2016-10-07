@@ -12,33 +12,36 @@
     <option ng-repeat="colType in columnGrp" value="{{colType}}">{{colType}}</option>
   </select>
 
-<input type="button" value="Add Device Information" ng-click="openDevInfoWindow()"/></br>
+<input type="button" class="btn btn-default" value="Add Device Information" ng-click="openDevInfoWindow()"/></br>
 
 <label>DateFrom:<input type="text" ng-model="dateFrom"></label>
 <label>DateTo:<input type="text" ng-model="dateTo"></label>
-<button type="button" ng-Click="findQcSummary(dateFrom,dateTo)">Search</button>
-<button type="button" ng-Click="deleteQcSummary(dateFrom,dateTo)">DELETE</button>
-<a href="#/qcSummaryAllCharts?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}"><button class="btn btn-default" style="float: right;">Show All Charts</button></a>
+<button class="btn btn-default" type="button" ng-Click="findQcSummary(dateFrom,dateTo)">Search</button>
+<button class="btn btn-default" type="button" ng-Click="deleteQcSummary(dateFrom,dateTo)">DELETE</button>
+<a href="#/qcSummaryAllCharts?data={{summaries| filter:machineName|filter:columnType|filter:{selFlg: true} }}&&dev={{devInfos| filter:machineName}}"><button class="btn btn-default" style="float: right;">Show All Charts</button></a>
 <button class="btn btn-default" type="submit" ng-click="saveComments()" style="float: right;">Save Comments</button></lable>
 <hr>
   <table class="table table-striped">
     <thead>
     <tr>
       <th>Index</th>
+      <th>Select</th>
       <th>RawfileInfomation</th>
-      <th><a href="#/qcSummary/MS?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS</a></th>
-      <th><a href="#/qcSummary/MMS?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS/MS</a></th>
-      <th><a href="#/qcSummary/MmsIdentify?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS/MS Identified</a></th>
-      <th><a href="#/qcSummary/PeptideSeq?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">Peptide Sequences Identified</a></th>
-      <th><a href="#/qcSummary/MMSIdentifyPtg?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">MS/MS Identified [%]</a></th>
-      <th><a href="#/qcSummary/PkRepSeqPtg?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">Peaks Repeatedly Sequenced [%]</a></th>
-      <th><a href="#/qcSummary/MassStdDev?data={{summaries| filter:machineName|filter:columnType}}&&dev={{devInfos| filter:machineName}}">Mass Standard Deviation [ppm] </a></th>
+      <th><a href="#/qcSummary/MS?data={{summaries| filter:machineName|filter:columnType|filter:{selFlg: true} }}&&dev={{devInfos| filter:machineName}}">MS</a></th>
+      <th><a href="#/qcSummary/MMS?data={{summaries| filter:machineName|filter:columnType|filter:{selFlg: true} }}&&dev={{devInfos| filter:machineName}}">MS/MS</a></th>
+      <th><a href="#/qcSummary/MmsIdentify?data={{summaries| filter:machineName|filter:columnType|filter:columnType|filter:{selFlg: true} }}&&dev={{devInfos| filter:machineName}}">MS/MS Identified</a></th>
+      <th><a href="#/qcSummary/PeptideSeq?data={{summaries| filter:machineName|filter:columnType|filter:columnType|filter:{selFlg: true} }}&&dev={{devInfos| filter:machineName}}">Peptide Sequences Identified</a></th>
+      <th><a href="#/qcSummary/MMSIdentifyPtg?data={{summaries| filter:machineName|filter:columnType|filter:columnType|filter:{selFlg: true} }}&&dev={{devInfos| filter:machineName}}">MS/MS Identified [%]</a></th>
+      <th><a href="#/qcSummary/PkRepSeqPtg?data={{summaries| filter:machineName|filter:columnType|filter:columnType|filter:{selFlg: true} }}&&dev={{devInfos| filter:machineName}}">Peaks Repeatedly Sequenced [%]</a></th>
+      <th><a href="#/qcSummary/MassStdDev?data={{summaries| filter:machineName|filter:columnType|filter:columnType|filter:{selFlg: true} }}&&dev={{devInfos| filter:machineName}}">Mass Standard Deviation [ppm] </a></th>
       <th>Comments</th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="summary in summaries | filter:machineName |filter:columnType" ng-init="addId($index,summaries)">
       <td>{{$index+1}}</td>
+      <td><input type="checkbox" name="selectedSummaries[]" ng-model="summary.selFlg" ng-change="updateSelection($index)">
+      </td>
       <td>{{summary.rawfileInfomation.proteinName}}_{{summary.rawfileInfomation.pQuantity}}_{{summary.rawfileInfomation.machineName}}_{{summary.rawfileInfomation.columnType}}_{{summary.rawfileInfomation.Date}}_{{summary.rawfileInfomation.Index}}</td>
       <td>{{summary.MS}}</td>
       <td>{{summary.MMS}}</td>

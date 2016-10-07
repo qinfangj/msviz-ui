@@ -27,6 +27,11 @@ angular.module('qcDevInfo-edit', ['thirdparties', 'environment'])
       return httpProxy.delete('/qc/deviceInfo' + '/'+ devDate + '/' + devType);
     };
 
+    QcDevInfoService.prototype.findDevInfoBtw2Date = function (dateFrom,dateTo) {
+
+      return httpProxy.get('/qc/deviceInfo' + '/'+ dateFrom + '/' + dateTo);
+    };
+
     return new QcDevInfoService();
   })
   .controller('QcDeviceInfoEditCtrl',  function($scope,$route,QcDevInfoService){

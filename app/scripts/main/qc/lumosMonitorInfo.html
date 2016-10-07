@@ -1,10 +1,10 @@
-<body ng-controller="EliteMonitorInfoCtrl">
+<body ng-controller="LumosMonitorInfoCtrl">
 
 <div >
   <h2>{{title}}</h2>
   <label>DateFrom:<input type="text" ng-model="dateFrom"></label>
   <label>DateTo:<input type="text" ng-model="dateTo"></label>
-  <button class="btn btn-primary" ng-click="showChart(dateFrom,dateTo)">Show Elite Monitor Chart</button><br>
+  <button class="btn btn-primary" ng-click="showChart(dateFrom,dateTo)">Show Lumos Monitor Chart</button><br>
   <hr>
 
   <ng-form name="insertForm">
@@ -13,14 +13,14 @@
         <td><input type="text" name="MonitorDate" style="width:90%" ng-model="monitorDate" placeholder="20160718" ng-pattern="reDate" required/><br>
           <span ng-show="insertForm.MonitorDate.$error.pattern"  style="color:red">Date should be in valid format.</span>
         </td>
-        <td><input type="text"  name="Multplier1" style="width:90%" ng-model="Multplier1" placeholder="1213.44" ng-pattern="reNumber" required><br>
-          <span ng-show="insertForm.Multplier1.$error.pattern"  style="color:red">Multplier1 should be valid number.</span>
+        <td><input type="text"  name="Multplier" style="width:90%" ng-model="Multplier" placeholder="1213.44" ng-pattern="reNumber" required><br>
+          <span ng-show="insertForm.Multplier.$error.pattern"  style="color:red">Multplier should be valid number.</span>
         </td>
-        <td><input type="text"  name="Multplier2" style="width:90%" ng-model="Multplier2"placeholder="1172.81" ng-pattern="reNumber" required><br>
-          <span ng-show="insertForm.Multplier2.$error.pattern"  style="color:red">Multplier2 should be valid number.</span>
+        <td><input type="text"  name="Transmission" style="width:90%" ng-model="Transmission"placeholder="0.88" ng-pattern="reNumber" required><br>
+          <span ng-show="insertForm.Transmission.$error.pattern"  style="color:red">Transmission should be valid number.</span>
         </td>
         <td><input type="text"  style="width:90%" ng-model="Comment"></td>
-        <td><input type="button" class="btn btn-primary" value="Add" ng-click="addMonitorInfo(monitorDate,Multplier1,Multplier2,Comment)"></td>
+        <td><input type="button" class="btn btn-primary" value="Add" ng-click="addMonitorInfo(monitorDate,Multplier,Transmission,Comment)"></td>
       </tr>
     </table>
   </ng-form>
@@ -35,18 +35,18 @@
     </colgroup>
     <tr>
       <th>Date </th>
-      <th>{{mtpNm1}}</th>
-      <th>{{mtpNm2}}</th>
+      <th>Multplier</th>
+      <th>Transmission</th>
       <th>Comment</th>
       <th>&emsp;</th>
     </tr>
-    <tr ng-repeat="monitorInfo in eliteMonitorInfos">
+    <tr ng-repeat="monitorInfo in lumosMonitorInfos">
       <td>{{monitorInfo.monitorDate}}</td>
-      <td>{{monitorInfo.Multplier1}}</td>
-      <td>{{monitorInfo.Multplier2}}</td>
+      <td>{{monitorInfo.Multplier}}</td>
+      <td>{{monitorInfo.Transmission}} </td>
       <td>{{monitorInfo.Comment}}</td>
       <td>
-        <input type="button" class="btn btn-primary" value="Edit" ng-click="go('{{monitorInfo.monitorDate}}','{{monitorInfo.monitorIndex}}','{{monitorInfo.Multplier1}}','{{monitorInfo.Multplier2}}','{{monitorInfo.Comment}}')">
+        <input type="button" class="btn btn-primary" value="Edit" ng-click="go('{{monitorInfo.monitorDate}}','{{monitorInfo.monitorIndex}}','{{monitorInfo.Multplier}}','{{monitorInfo.Transmission}}','{{monitorInfo.Comment}}')">
         <input type="button" class="btn btn-primary" value="Delete" ng-click="delEliteMonitorInfo('{{monitorInfo.monitorDate}}','{{monitorInfo.monitorIndex}}')"></td>
     </tr>
   </table>

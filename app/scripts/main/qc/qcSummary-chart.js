@@ -69,9 +69,12 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
     };
 
     getChartInfo(title,colName,summaries,devInfos,max,min);
+    // set figure width
+    $scope.figLen = window.innerWidth;
+
     console.log('title=' + title);
     console.log('colName=' + colName);
-    //console.log('devInfos='+$scope.devInfos);
+    console.log('devInfos='+$scope.devInfos);
   })
   .directive('comboChart',function(d3){
     return {
@@ -90,7 +93,7 @@ angular.module('qcSummary-chart', ['thirdparties', 'environment'])
 
         //Define the margin,width,height
         var margin = {top: 30, right: 150, bottom: 70, left: 80},
-          width = 1100 - margin.left - margin.right,
+          width = scope.figLen - margin.left - margin.right,
           height = 600 - margin.top - margin.bottom;
 
         // Set the ranges x

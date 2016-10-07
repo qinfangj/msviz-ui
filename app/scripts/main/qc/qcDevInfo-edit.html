@@ -1,6 +1,6 @@
 <div ng-controller="QcDeviceInfoEditCtrl">
   <h1>Device Information Edit</h1>
-  <input type="button" value="Set Device Info" ng-click="setDevInfo()"/>
+  <input type="button" class="btn btn-primary" value="Set Device Info" ng-click="setDevInfo()"/>
   <table class="table table-striped">
     <thead>
     <tr>
@@ -21,7 +21,7 @@
         </select>
       </td>
       <td><input type="text"  ng-model="devInfo"></td>
-      <td><input type="button" value="Add" ng-click="addDevInfo(devDate,devType,devInfo)"></td>
+      <td><input type="button" class="btn btn-primary" value="Add" ng-click="addDevInfo(devDate,devType,devInfo)"></td>
     </tr>
     </tbody>
   </table>
@@ -42,7 +42,7 @@
       <td>{{devInfo.devDate}}</td>
       <td>{{devInfo.devType}}</td>
       <td>{{devInfo.devInfo}}</td>
-      <td><input type="button" value="Delete" ng-click="delDevInfo('{{devInfo.devDate}}','{{devInfo.devType}}')"></td>
+      <td><input type="button" class="btn btn-primary" value="Delete" ng-click="delDevInfo('{{devInfo.devDate}}','{{devInfo.devType}}')"></td>
     </tr>
     </tbody>
   </table>

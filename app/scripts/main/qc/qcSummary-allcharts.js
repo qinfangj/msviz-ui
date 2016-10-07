@@ -133,7 +133,12 @@ angular.module('qcSummary-allcharts', ['thirdparties', 'environment'])
         // Scale the range of the data X,Y
         var domainX= scatterData.map(function (d) {
           return d.date;
-        }).concat(devInfos.map(function(i){return i.devDate;}));
+        });
+        if (devInfos !== null) {
+            domainX=domainX.concat(devInfos.map(function (i) {
+              return i.devDate;
+            }));
+        }
 
         x.domain(_.sortBy(domainX,function(num){return num;}))
           .rangePoints([0, width]);

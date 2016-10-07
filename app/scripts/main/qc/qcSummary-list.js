@@ -1,5 +1,5 @@
 'use strict';
-angular.module('qcSummary-list', ['thirdparties', 'environment'])
+angular.module('qcSummary-list', ['thirdparties', 'environment','checklist-model'])
 /**
  * @ngdoc service
  * @name service:qcSummaryService
@@ -7,6 +7,16 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
  * Access to qcSummary
  *
  */
+/**
+ * custom filter
+ */
+  //.filter('summarySelection', ['filterFilter', function (filterFilter) {
+  //  return function summarySelection(input, prop) {
+  //    return filterFilter(input, { selFlg: true }).map(function (summary) {
+  //      console.log('filter=' + summary[prop] );
+  //      return summary[prop]; });
+  //  };
+  //}])
   .service('QcSummaryService', function (httpProxy) {
 
     var QcSummaryService = function () {
@@ -37,33 +47,58 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
       return httpProxy.delete('/qc/summary' + '/'+ dateFrom + '/' + dateTo);
     };
 
-    QcSummaryService.prototype.updateCmtByRawfileInfo = function (updateInfo) {
+    QcSummaryService.prototype.updateInfoByRawfileInfo = function (updateInfo) {
 
-      return httpProxy.put('/qc/summary', updateInfo,{headers: {'Content-Type': undefined}});
+        return httpProxy.put('/qc/summary', updateInfo,{headers: {'Content-Type': undefined}});
+
+    };
+    QcSummaryService.prototype.updateSelByRawfileInfo = function (updateInfo,updateType) {
+
+      return httpProxy.put('/qc/summary/'+ updateType, updateInfo,{headers: {'Content-Type': undefined}});
+
     };
 
     return new QcSummaryService();
-  }
+  })
 
-
-)
-
-  .controller('QcSummaryListCtrl', function($scope,$route,$window, QcSummaryService,QcDevInfoService){
-
-
+  .controller('QcSummaryListCtrl', function($scope,$route,$window,filterFilter,QcSummaryService,QcDevInfoService){
 
 
     QcSummaryService.list().then(function(data){
       $scope.summaries = data;
+
+      // helper method
+      $scope.selectedSummaries = function selectedSummaries() {
+        return filterFilter($scope.summaries, { selFlg: true });
+      };
+
       $scope.machineGrp=getMachineGrp(data);
       $scope.columnGrp=getColumnGrp(data);
 
     });
 
+    $scope.selectedSummaries = [];
+
+    //$scope.selectedIds = [];
+    $scope.updateSelection= function($index){
+      console.log('index=' + $index);
+      console.log('selected rawfileInfomation=' + $scope.summaries[$index].rawfileInfomation.Date +'_'+ $scope.summaries[$index].rawfileInfomation.Index );
+      console.log('selected selFlg=' + $scope.summaries[$index].selFlg);
+      var updateSel = {'rawfileInfomation':$scope.summaries[$index].rawfileInfomation,'selFlg':$scope.summaries[$index].selFlg};
+      QcSummaryService.updateSelByRawfileInfo(updateSel,'sel').success(function (resp) {
+        console.log('update successfully=', resp);
+        $route.reload();
+      }).error(function (error) {
+        console.log('update failed=', error);
+      });
+
+    };
+
+
     //get Device infomation
     QcDevInfoService.list().then(function(data){
       $scope.devInfos = data;
-      console.log($scope.devInfos);
+      //console.log($scope.devInfos);
 
     });
 
@@ -110,7 +145,7 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
       console.log($scope.changedCmts);
 
       $scope.changedCmts.forEach(function (k) {
-        QcSummaryService.updateCmtByRawfileInfo(k).success(function (resp) {
+        QcSummaryService.updateInfoByRawfileInfo(k).success(function (resp) {
           console.log('update successfully=', resp);
           $route.reload();
         }).error(function (error) {
@@ -169,6 +204,8 @@ angular.module('qcSummary-list', ['thirdparties', 'environment'])
 
     $scope.devInfos=[];
     $scope.openDevInfoWindow = function () {
+
+
 
       window.$windowScope = $scope;
 
