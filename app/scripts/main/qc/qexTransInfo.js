@@ -105,7 +105,7 @@ angular.module('qexTransInfo', ['thirdparties', 'environment'])
 
   })
 
-  .controller('QexTransInfoCtrl', function($scope,$route,$window, QexTransInfoService) {
+  .controller('QexTransInfoCtrl', function($scope,$route,$window,$rootScope,QexTransInfoService,QcSummaryService,QcDevInfoService) {
 
     $scope.title='Qex Transmission Infomation';
     $scope.ctlName = 'QexTransInfoCtrl';
@@ -190,9 +190,19 @@ angular.module('qexTransInfo', ['thirdparties', 'environment'])
               comment: s.Comment
             };
           });
-          $window.location.href= '#/qexTransInfo/'+ angular.toJson(qexData);
+          $rootScope.qexData=qexData;
+        });
+        QcSummaryService.list().then(function(summaries){
+
+          $rootScope.summaries = summaries;
 
         });
+        QcDevInfoService.list().then(function(devInfo){
+
+          $rootScope.devInfo = devInfo;
+
+        });
+
       }else {
 
         QexTransInfoService.findAllBtw2Date(dateFrom, dateTo).then(function (data) {
@@ -204,10 +214,20 @@ angular.module('qexTransInfo', ['thirdparties', 'environment'])
               comment: s.Comment
             };
           });
-          $window.location.href= '#/qexTransInfo/' + angular.toJson(qexData);
+          $rootScope.qexData=qexData;
+        });
+        QcSummaryService.findAllBtw2Date(dateFrom,dateTo).then(function(summaries){
+
+          $rootScope.summaries = summaries;
+
+        });
+        QcDevInfoService.findDevInfoBtw2Date(dateFrom,dateTo).then(function(devInfo){
+
+          $rootScope.devInfo = devInfo;
+
         });
       }
-      //$scope.status ='';
+      $window.location.href= '#/qexTransInfo/chart';
     };
 
   })
