@@ -7,14 +7,24 @@
 /* Controllers */
 angular.module('eliteMonitorChart', ['thirdparties', 'environment','qcSummary-list','qcDevInfo-edit'])
 
-  .controller('EliteMonitorChartCtrl', function($scope,$routeParams,$window,QcSummaryService,QcDevInfoService) {
+  .controller('EliteMonitorChartCtrl', function($scope,$routeParams,$rootScope,$window) {
 
-    var eliteData = JSON.parse($routeParams.data);
+    //console.log('$routeScope.summaries=' + $rootScope.summaries);
+    //console.log('$routeScope.eliteData=' + $rootScope.eliteData);
+    //console.log('$rootScope.devInfo=' + $rootScope.devInfo);
+    $scope.need_to_access_this
+    var eliteData = $rootScope.eliteData;
     $scope.eliteData = eliteData;
-    //console.log('$scope.eliteData=' + eliteData.length);
-    var summaries = JSON.parse($routeParams.summaries);
-    //console.log('summaries=' + summaries.length);
-    $scope.devInfos=null;
+    //filter summaries using 'Elite' machine
+    var summaries = _.filter($rootScope.summaries,function(o){
+      return (o.rawfileInfomation.machineName ==='Elite' && o.selFlg === true);
+    });
+
+    console.log('summaries=' + summaries);
+    //device cleaning infomation
+    $scope.devInfos=_.filter($rootScope.devInfo,function(d){
+      return d.devType ==='Elite';
+    });
 
       $scope.pepseqidfScatData = _.map(summaries, function (s) {
         return {
@@ -37,15 +47,11 @@ angular.module('eliteMonitorChart', ['thirdparties', 'environment','qcSummary-li
           }, 0) / (_.pluck(g, 'PeptideSeq').length === 0 ? 1 : _.pluck(g, 'PeptideSeq').length)
         };
       });
-      console.log('$scope.scatterData=' + $scope.pepseqidfScatData);
-      console.log('groupSummary=' + groupSummary.length);
-      console.log('$scope.lineData=' + $scope.pepseqidfLineData);
+     //console.log('$scope.scatterData=' + $scope.pepseqidfScatData);
+     //console.log('groupSummary=' + groupSummary.length);
+     //console.log('$scope.lineData=' + $scope.pepseqidfLineData);
 
-    console.log('Monitor summaries=' + summaries.length);
-
-    QcDevInfoService.list().then(function(data){
-      $scope.devInfos = data;
-    });
+    //console.log('Monitor summaries=' + summaries.length);
 
     $scope.figLen = window.outerWidth*0.45;
 
@@ -60,7 +66,8 @@ angular.module('eliteMonitorChart', ['thirdparties', 'environment','qcSummary-li
     return{
       restrict: 'E',
       template: '<svg width="1100" height="600"></svg>',
-      link: function (scope, elem,attrs) {
+      link: function (scope, elem) {
+
         var eliteData = scope.eliteData;
         console.log('eliteData='+ eliteData);
 
