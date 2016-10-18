@@ -67,7 +67,7 @@ angular
         templateUrl: 'scripts/main/qc/eliteMonitorInfoEdit.html',
         controller: 'EliteMonitorInfoEditCtrl'
       })
-      .when('/eliteMonitorInfo/:data', {
+      .when('/eliteMonitorInfo/chart', {
         templateUrl: 'scripts/main/qc/eliteMonitorChart.html',
         controller: 'EliteMonitorChartCtrl'
       })
@@ -87,7 +87,7 @@ angular
         templateUrl: 'scripts/main/qc/qexTransInfo.html',
         controller: 'QexTransInfoCtrl'
       })
-      .when('/qexTransInfo/:data', {
+      .when('/qexTransInfo/chart', {
         templateUrl: 'scripts/main/qc/qexTransChart.html',
         controller: 'QexTransChartCtrl'
       })
