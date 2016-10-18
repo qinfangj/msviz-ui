@@ -1,7 +1,6 @@
 <div ng-controller="EliteMonitorChartCtrl">
   <h3>Elite Monitor Tracker</h3>
-  {{summaries}}
   <button ng-click="$back()">Back</button>
-  <row><elite-chart elite-data="{{eliteData}}" summaries="summaries"></elite-chart>
+  <row><elite-chart elite-data="eliteData"></elite-chart>
     <div-chart id="pepseqidf" scatter-data="pepseqidfScatData" line-data="pepseqidfLineData"></div-chart></row>
 </div>
