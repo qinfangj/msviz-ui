@@ -171,7 +171,7 @@ angular.module('eliteMonitorInfo', ['thirdparties', 'environment'])
     };
 
   })
-  .controller('EliteMonitorInfoCtrl', function($scope,$route,popupService, $window,EliteMonitorInfoService,QcSummaryService) {
+  .controller('EliteMonitorInfoCtrl', function($scope,$route,$rootScope,popupService,$window,EliteMonitorInfoService,QcSummaryService,QcDevInfoService) {
 
     $scope.title ='Elite Monitor Infomation';
 
@@ -271,13 +271,20 @@ angular.module('eliteMonitorInfo', ['thirdparties', 'environment'])
               val2: s.Multplier2,
               comment: s.Comment
             };
+          });
+          $rootScope.eliteData = eliteData;
+        });
+        QcSummaryService.list().then(function(summaries){
 
-          });
-          QcSummaryService.list().then(function(summaries){
-            $window.location.href= '#/eliteMonitorInfo/'+ angular.toJson(eliteData) + '?summaries=' + angular.toJson(summaries);
-          });
+          $rootScope.summaries = summaries;
 
         });
+        QcDevInfoService.list().then(function(devInfo){
+
+          $rootScope.devInfo = devInfo;
+
+        });
+
       }else {
 
         EliteMonitorInfoService.findAllBtw2Date(dateFrom, dateTo).then(function (data) {
@@ -290,9 +297,20 @@ angular.module('eliteMonitorInfo', ['thirdparties', 'environment'])
               comment: s.Comment
             };
           });
-          $window.location.href= '#/eliteMonitorInfo/' + angular.toJson(eliteData)+ '?dateFrom=' + dateFrom + '&dateTo=' + dateTo;
+          $rootScope.eliteData = eliteData;
+        });
+        QcSummaryService.findAllBtw2Date(dateFrom,dateTo).then(function(summaries){
+
+          $rootScope.summaries = summaries;
+
+        });
+        QcDevInfoService.findDevInfoBtw2Date(dateFrom,dateTo).then(function(devInfo){
+
+          $rootScope.devInfo = devInfo;
+
         });
       }
+      $window.location.href= '#/eliteMonitorInfo/chart';
     };
 
   })
