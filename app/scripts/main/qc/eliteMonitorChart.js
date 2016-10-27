@@ -12,7 +12,7 @@ angular.module('eliteMonitorChart', ['thirdparties', 'environment','qcSummary-li
     //console.log('$routeScope.summaries=' + $rootScope.summaries);
     //console.log('$routeScope.eliteData=' + $rootScope.eliteData);
     //console.log('$rootScope.devInfo=' + $rootScope.devInfo);
-    $scope.need_to_access_this
+    
     var eliteData = $rootScope.eliteData;
     $scope.eliteData = eliteData;
     //filter summaries using 'Elite' machine
