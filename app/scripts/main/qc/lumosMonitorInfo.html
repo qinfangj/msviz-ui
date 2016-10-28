@@ -1,6 +1,6 @@
-<body ng-controller="LumosMonitorInfoCtrl">
+<div ng-controller="LumosMonitorInfoCtrl">
 
-<div >
+<div ng-if="showDiv==='list'" >
   <h2>{{title}}</h2>
   <label>DateFrom:<input type="text" ng-model="dateFrom"></label>
   <label>DateTo:<input type="text" ng-model="dateTo"></label>
@@ -52,4 +52,13 @@
   </table>
 </div>
 
-</body>
+<div ng-if="showDiv==='chart'">
+  <h3>Lumos Monitor Tracker</h3>
+
+  <button ng-click="$back()">Back</button>
+  <row><lumos-chart lumos-data="lumosData"></lumos-chart>
+    <div-chart id="pepseqidf" scatter-data="pepseqidfScatData" line-data="pepseqidfLineData"></div-chart>
+  </row>
+</div>
+
+</div>
