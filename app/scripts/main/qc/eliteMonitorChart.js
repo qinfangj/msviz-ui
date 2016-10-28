@@ -1,5 +1,5 @@
 /**
- * Created by qjolliet on 20/07/16.
+ * Created by qjolliet on 20/07/16 test push
  */
 
 'use strict';
@@ -12,7 +12,7 @@ angular.module('eliteMonitorChart', ['thirdparties', 'environment','qcSummary-li
     //console.log('$routeScope.summaries=' + $rootScope.summaries);
     //console.log('$routeScope.eliteData=' + $rootScope.eliteData);
     //console.log('$rootScope.devInfo=' + $rootScope.devInfo);
-    
+
     var eliteData = $rootScope.eliteData;
     $scope.eliteData = eliteData;
     //filter summaries using 'Elite' machine
