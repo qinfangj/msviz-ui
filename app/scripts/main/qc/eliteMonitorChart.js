@@ -1,5 +1,5 @@
 /**
- * Created by qjolliet on 20/07/16 test push
+ * Created by qjolliet on 20/07/16 test changing origin url
  */
 
 'use strict';
